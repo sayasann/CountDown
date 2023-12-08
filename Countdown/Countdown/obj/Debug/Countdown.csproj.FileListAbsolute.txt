@@ -1,0 +1,7 @@
+C:\Users\serka\source\repos\Countdown\Countdown\bin\Debug\Countdown.exe.config
+C:\Users\serka\source\repos\Countdown\Countdown\bin\Debug\Countdown.exe
+C:\Users\serka\source\repos\Countdown\Countdown\bin\Debug\Countdown.pdb
+C:\Users\serka\source\repos\Countdown\Countdown\obj\Debug\Countdown.csproj.AssemblyReference.cache
+C:\Users\serka\source\repos\Countdown\Countdown\obj\Debug\Countdown.csproj.CoreCompileInputs.cache
+C:\Users\serka\source\repos\Countdown\Countdown\obj\Debug\Countdown.exe
+C:\Users\serka\source\repos\Countdown\Countdown\obj\Debug\Countdown.pdb

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Dynamic;
 using System.Globalization;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Media;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+
 
 namespace Countdown
 {
@@ -24,6 +26,19 @@ namespace Countdown
         static bool isTrue2 = true;
         static int randomdir = 0;
 
+        static void PlaySound(string soundFilePath)
+        {
+            using (SoundPlayer sound = new SoundPlayer(soundFilePath))
+            {
+                // Play the sound
+                while (true)
+                {
+                    sound.PlaySync();
+                    Thread.Sleep(1000);
+                }
+            }
+        }
+
         static int randomy = 0;
         static int randomx = 0;
         static string[,] gameField = new string[23, 53];
@@ -31,7 +46,9 @@ namespace Countdown
         static void Main(string[] args)
         {
             Console.CursorVisible = false;
-            //gameBeginner();
+            Thread soundThread = new Thread(() => PlaySound("03.wav"));
+            soundThread.Start();
+            gameBeginner();
             ConsoleKeyInfo cki;
 
 
@@ -49,13 +66,14 @@ namespace Countdown
                 }
             }
 
-
+            
             innitialWalls();
-
+            
+            
 
             while (true)
             {
-
+                
                 for (int i = 0; i < 70;)
                 {
                     int number = random.Next(0, 10);
@@ -73,6 +91,7 @@ namespace Countdown
                 }
                 break;
             }
+            
             //playerin oluşması
             int cursorx = 0;
             int cursory = 0;
@@ -88,7 +107,7 @@ namespace Countdown
                 }
             }
 
-
+            
             for (int i = 0; i < gameField.GetLength(0); i++)
             {
                 for (int j = 0; j < gameField.GetLength(1); j++)
@@ -97,30 +116,36 @@ namespace Countdown
                 }
                 Console.WriteLine();
             }
+            int rastgeley = 0;
+            int rastgelex = 0;
+            int rastgelesayiSmash = 0;
             string[,] zeroPosition = new string[22, 52];
             string[,] playerPosition = new string[22, 52];
             while (1 <= gameLive)
             {
-
+                Console.ForegroundColor = ConsoleColor.White;
 
                 Console.SetCursorPosition(59, 1);
-                Console.WriteLine($"Time : {gameTime}");
+                Console.WriteLine($"{{Time}} : {gameTime}");
 
                 Console.SetCursorPosition(59, 3);
-                Console.WriteLine($"Live : {gameLive}");
+                Console.WriteLine($"{{Live}} : {gameLive}");
 
                 Console.SetCursorPosition(59, 5);
-                Console.WriteLine($"Score : {gameScore}");
+                Console.WriteLine($"{{Score}} : {gameScore}");
                 bool push = false; ;
                 int counter = 1;
                 int temp = 0;
                 bool smash = false;
-                while (Console.KeyAvailable)
+                if (Console.KeyAvailable)
                 {
 
                     // true: there is a key in keyboard buffer
                     cki = Console.ReadKey(true);       // true: do not write character 
-
+                    while (Console.KeyAvailable)
+                    {
+                        Console.ReadKey(true );
+                    }
                     if (cki.Key == ConsoleKey.RightArrow && cursorx < 51)
                     {
                         string currentCellValue = gameField[cursory, cursorx + 1];
@@ -198,6 +223,25 @@ namespace Countdown
                             }
                             else if (gameField[cursory, cursorx + counter] == "#" && smash && push)
                             {
+                                if (gameField[cursory, cursorx + counter - 1] == "0") gameScore += 20;
+                                else if (gameField[cursory, cursorx + counter - 1] == "1" || gameField[cursory, cursorx + counter - 1] == "2" || gameField[cursory, cursorx + counter - 1] == "3" || gameField[cursory, cursorx + counter - 1] == "4") gameScore += 2;
+                                else if (gameField[cursory, cursorx + counter - 1] == "6" || gameField[cursory, cursorx + counter - 1] == "7" || gameField[cursory, cursorx + counter - 1] == "8" || gameField[cursory, cursorx + counter - 1] == "9") gameScore += 1;
+
+                                do
+                                {
+                                    rastgelex = random.Next(1, 52);
+                                    rastgeley = random.Next(1, 22);
+                                    rastgelesayiSmash=random.Next(5,10);
+                                    
+                                    
+
+                                } while (gameField[rastgeley,rastgelex]!=" ");
+                                gameField[rastgeley, rastgelex] = rastgelesayiSmash.ToString();
+                                Console.SetCursorPosition(rastgelex, rastgeley);
+                                Console.WriteLine(rastgelesayiSmash);
+
+
+
                                 // Sondan başlayarak tüm sayıları sağa kaydırma
                                 for (int i = counter; i > 1; i--)
                                 {
@@ -209,15 +253,23 @@ namespace Countdown
                                         Console.WriteLine(" ");
                                         Console.SetCursorPosition(cursorx + i - 1, cursory);
                                         Console.WriteLine(temp);
+                                        
                                     }
+                                    
+                                    
+
                                 }
+                                
 
                                 Console.SetCursorPosition(cursorx, cursory);
                                 Console.WriteLine(" ");
                                 gameField[cursory, cursorx] = " ";
                                 cursorx++;
                                 gameField[cursory, cursorx] = "X";
+
+                                
                             }
+                            
                         }
 
 
@@ -302,6 +354,23 @@ namespace Countdown
                             }
                             else if (gameField[cursory, cursorx - counter] == "#" && smash && push)
                             {
+                                if (gameField[cursory, cursorx - counter + 1] == "0") gameScore += 20;
+                                else if (gameField[cursory, cursorx - counter + 1] == "1" || gameField[cursory, cursorx - counter + 1] == "2" || gameField[cursory, cursorx - counter + 1] == "3" || gameField[cursory, cursorx - counter + 1] == "4") gameScore += 2;
+                                else if (gameField[cursory, cursorx - counter + 1] == "6" || gameField[cursory, cursorx - counter + 1] == "7" || gameField[cursory, cursorx - counter + 1] == "8" || gameField[cursory, cursorx - counter + 1] == "9") gameScore += 1;
+
+                                do
+                                {
+                                    rastgelex = random.Next(1, 52);
+                                    rastgeley = random.Next(1, 22);
+                                    rastgelesayiSmash = random.Next(5, 10);
+
+
+
+                                } while (gameField[rastgeley, rastgelex] != " ");
+                                gameField[rastgeley, rastgelex] = rastgelesayiSmash.ToString();
+                                Console.SetCursorPosition(rastgelex, rastgeley);
+                                Console.WriteLine(rastgelesayiSmash);
+
                                 // Sondan başlayarak tüm sayıları sola kaydırma
                                 for (int i = counter; i > 1; i--)
                                 {
@@ -403,6 +472,23 @@ namespace Countdown
                             }
                             else if (gameField[cursory - counter, cursorx] == "#" && smash && push)
                             {
+                                if (gameField[cursory-counter+1, cursorx ] == "0") gameScore += 20;
+                                else if (gameField[cursory - counter + 1, cursorx] == "1" || gameField[cursory - counter + 1, cursorx] == "2" || gameField[cursory - counter + 1, cursorx ] == "3" || gameField[cursory - counter + 1, cursorx ] == "4") gameScore += 2;
+                                else if (gameField[cursory - counter + 1, cursorx] == "6" || gameField[cursory - counter + 1, cursorx] == "7" || gameField[cursory - counter + 1, cursorx ] == "8" || gameField[cursory - counter + 1, cursorx ] == "9") gameScore += 1;
+
+                                do
+                                {
+                                    rastgelex = random.Next(1, 52);
+                                    rastgeley = random.Next(1, 22);
+                                    rastgelesayiSmash = random.Next(5, 10);
+
+
+
+                                } while (gameField[rastgeley, rastgelex] != " ");
+                                gameField[rastgeley, rastgelex] = rastgelesayiSmash.ToString();
+                                Console.SetCursorPosition(rastgelex, rastgeley);
+                                Console.WriteLine(rastgelesayiSmash);
+
                                 // Sondan başlayarak tüm sayıları sağa kaydırma
                                 for (int i = counter; i > 1; i--)
                                 {
@@ -505,6 +591,23 @@ namespace Countdown
                             }
                             else if (gameField[cursory + counter, cursorx] == "#" && smash && push)
                             {
+                                if (gameField[cursory + counter - 1, cursorx] == "0") gameScore += 20;
+                                else if (gameField[cursory + counter - 1, cursorx] == "1" || gameField[cursory + counter - 1, cursorx] == "2" || gameField[cursory + counter - 1, cursorx] == "3" || gameField[cursory + counter - 1, cursorx] == "4") gameScore += 2;
+                                else if (gameField[cursory + counter - 1, cursorx] == "6" || gameField[cursory + counter - 1, cursorx] == "7" || gameField[cursory + counter - 1, cursorx] == "8" || gameField[cursory + counter - 1, cursorx] == "9") gameScore += 1;
+
+                                do
+                                {
+                                    rastgelex = random.Next(1, 52);
+                                    rastgeley = random.Next(1, 22);
+                                    rastgelesayiSmash = random.Next(5, 10);
+
+
+
+                                } while (gameField[rastgeley, rastgelex] != " ");
+                                gameField[rastgeley, rastgelex] = rastgelesayiSmash.ToString();
+                                Console.SetCursorPosition(rastgelex, rastgeley);
+                                Console.WriteLine(rastgelesayiSmash);
+
                                 // Sondan başlayarak tüm sayıları sağa kaydırma
                                 for (int i = counter; i > 1; i--)
                                 {
@@ -754,10 +857,10 @@ namespace Countdown
 
 
 
-
+                Console.ForegroundColor= ConsoleColor.DarkCyan;
                 Console.SetCursorPosition(cursorx, cursory);    // refresh X (current position)
 
-                Console.WriteLine("X");
+                Console.WriteLine("P");
 
                 Thread.Sleep(50);     // sleep 50 ms
 
@@ -774,6 +877,13 @@ namespace Countdown
 
 
             }
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            if (gameLive==0)
+            {
+                Console.SetCursorPosition(36, 20);
+                Console.WriteLine("YOU LOOSE :(");
+            }
 
         }
 
@@ -782,16 +892,16 @@ namespace Countdown
             Console.CursorVisible = false;
             Console.ForegroundColor = ConsoleColor.DarkRed;
 
-            Console.WriteLine("▄████████  ▄██████▄  ███    █▄  ███▄▄▄▄       ███     ████████▄   ▄██████▄   ▄█     █▄  ███▄▄▄▄   ");
-            Console.WriteLine("███    ███ ███    ███ ███    ███ ███▀▀▀██▄ ▀█████████▄ ███   ▀███ ███    ███ ███     ███ ███▀▀▀██▄ ");
-            Console.WriteLine("███    █▀  ███    ███ ███    ███ ███   ███    ▀███▀▀██ ███    ███ ███    ███ ███     ███ ███   ███ ");
-            Console.WriteLine("███        ███    ███ ███    ███ ███   ███     ███   ▀ ███    ███ ███    ███ ███     ███ ███   ███ ");
-            Console.WriteLine("███        ███    ███ ███    ███ ███   ███     ███     ███    ███ ███    ███ ███     ███ ███   ███");
-            Console.WriteLine("███    █▄  ███    ███ ███    ███ ███   ███     ███     ███    ███ ███    ███ ███     ███ ███   ███ ");
-            Console.WriteLine("███    ███ ███    ███ ███    ███ ███   ███     ███     ███   ▄███ ███    ███ ███ ▄█▄ ███ ███   ███");
-            Console.WriteLine("████████▀   ▀██████▀  ████████▀   ▀█   █▀     ▄████▀   ████████▀   ▀██████▀   ▀███▀███▀   ▀█   █▀  ");
+            Console.WriteLine("          ▄████████  ▄██████▄  ███    █▄  ███▄▄▄▄       ███     ████████▄   ▄██████▄   ▄█     █▄  ███▄▄▄▄   ");
+            Console.WriteLine("          ███    ███ ███    ███ ███    ███ ███▀▀▀██▄ ▀█████████▄ ███   ▀███ ███    ███ ███     ███ ███▀▀▀██▄ ");
+            Console.WriteLine("          ███    █▀  ███    ███ ███    ███ ███   ███    ▀███▀▀██ ███    ███ ███    ███ ███     ███ ███   ███ ");
+            Console.WriteLine("          ███        ███    ███ ███    ███ ███   ███     ███   ▀ ███    ███ ███    ███ ███     ███ ███   ███ ");
+            Console.WriteLine("          ███        ███    ███ ███    ███ ███   ███     ███     ███    ███ ███    ███ ███     ███ ███   ███");
+            Console.WriteLine("          ███    █▄  ███    ███ ███    ███ ███   ███     ███     ███    ███ ███    ███ ███     ███ ███   ███ ");
+            Console.WriteLine("          ███    ███ ███    ███ ███    ███ ███   ███     ███     ███   ▄███ ███    ███ ███ ▄█▄ ███ ███   ███");
+            Console.WriteLine("          ████████▀   ▀██████▀  ████████▀   ▀█   █▀     ▄████▀   ████████▀   ▀██████▀   ▀███▀███▀   ▀█   █▀  ");
 
-            Console.SetCursorPosition(37, 9);
+            Console.SetCursorPosition(40, 15);
             Console.ForegroundColor = ConsoleColor.DarkRed;
 
             Console.WriteLine("Herhangi bir tuşa basınız...");
@@ -879,6 +989,7 @@ namespace Countdown
 
         static void innitialWalls()
         {
+           
             for (int i = 0; i < 3; i++)
             {
                 bool isTrue = false;
@@ -1126,8 +1237,9 @@ namespace Countdown
                     }
                 }
             }
+            
         }
-
+        
 
 
 

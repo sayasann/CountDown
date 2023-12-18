@@ -25,7 +25,7 @@ namespace Countdown
         static int hareketSifir = 0;
         static bool isTrue2 = true;
         static int randomdir = 0;
-
+        //şarkı'nın loop içinde çalması için fonksiyon
         static void PlaySound(string soundFilePath)
         {
             using (SoundPlayer sound = new SoundPlayer(soundFilePath))
@@ -66,11 +66,11 @@ namespace Countdown
                 }
             }
 
-            
+            //oyun duvarlarının oluşması
             innitialWalls();
             
             
-
+            //sayıların oluşması
             while (true)
             {
                 
@@ -107,7 +107,7 @@ namespace Countdown
                 }
             }
 
-            
+            //harita duvarlarının yazdırılması
             for (int i = 0; i < gameField.GetLength(0); i++)
             {
                 for (int j = 0; j < gameField.GetLength(1); j++)
@@ -121,10 +121,11 @@ namespace Countdown
             int rastgelesayiSmash = 0;
             string[,] zeroPosition = new string[22, 52];
             string[,] playerPosition = new string[22, 52];
+            //oyun döngüsü
             while (1 <= gameLive)
             {
                 Console.ForegroundColor = ConsoleColor.White;
-
+                //oyun tahtası
                 Console.SetCursorPosition(59, 1);
                 Console.WriteLine($"{{Time}} : {gameTime}");
 
@@ -146,13 +147,12 @@ namespace Countdown
                     {
                         Console.ReadKey(true );
                     }
+                    //sağ doğru hareket
                     if (cki.Key == ConsoleKey.RightArrow && cursorx < 51)
                     {
                         string currentCellValue = gameField[cursory, cursorx + 1];
 
-                        string currentCellValueright = gameField[cursory, cursorx + 2];
-
-                        // Eğer currentCellValue listNumber içinde yoksa işlemi yap
+                        // Eğer currentCellValue listNumber içinde yoksa işlemi yap, duvar yoksa hareket etmeyi sağlıyor
                         if (!listUnTouch.Contains(currentCellValue))
                         {
                             Console.SetCursorPosition(cursorx, cursory);
@@ -161,7 +161,7 @@ namespace Countdown
                             cursorx++;
                             gameField[cursory, cursorx] = "X";
                         }
-
+                        //sayı itmesi
                         else if (numbers.Contains(currentCellValue))
                         {
 
@@ -221,12 +221,14 @@ namespace Countdown
                                 cursorx++;
                                 gameField[cursory, cursorx] = "X";
                             }
+                            //sayının sağı duvarsa, azalansa ve smash edilebilirse
                             else if (gameField[cursory, cursorx + counter] == "#" && smash && push)
                             {
+                                //puan kontrolü
                                 if (gameField[cursory, cursorx + counter - 1] == "0") gameScore += 20;
                                 else if (gameField[cursory, cursorx + counter - 1] == "1" || gameField[cursory, cursorx + counter - 1] == "2" || gameField[cursory, cursorx + counter - 1] == "3" || gameField[cursory, cursorx + counter - 1] == "4") gameScore += 2;
                                 else if (gameField[cursory, cursorx + counter - 1] == "6" || gameField[cursory, cursorx + counter - 1] == "7" || gameField[cursory, cursorx + counter - 1] == "8" || gameField[cursory, cursorx + counter - 1] == "9") gameScore += 1;
-
+                                //her smash edilen sayı için rastgele sayı oluşuyor
                                 do
                                 {
                                     rastgelex = random.Next(1, 52);
@@ -260,7 +262,7 @@ namespace Countdown
 
                                 }
                                 
-
+                                //playeri hareket ettirme
                                 Console.SetCursorPosition(cursorx, cursory);
                                 Console.WriteLine(" ");
                                 gameField[cursory, cursorx] = " ";
@@ -276,12 +278,12 @@ namespace Countdown
 
                     }
 
-
+                    //sola doğru hareket
                     if (cki.Key == ConsoleKey.LeftArrow && cursorx > 1)
                     {
                         string currentCellValue = gameField[cursory, cursorx - 1];
 
-                        // Eğer currentCellValue listNumber içinde yoksa işlemi yap
+                        // Eğer currentCellValue listNumber içinde yoksa işlemi yap, duvar yoksa hareket etmeyi sağlıyor
                         if (!listUnTouch.Contains(currentCellValue))
                         {
                             Console.SetCursorPosition(cursorx, cursory);
@@ -293,16 +295,17 @@ namespace Countdown
 
 
                         }
+                        //sayı itmesi
                         else if (numbers.Contains(currentCellValue))
                         {
-
+                            //Player dahil kaç tane sayı olduğunu sayıyor
                             while (gameField[cursory, cursorx - counter] != " " && gameField[cursory, cursorx - counter] != "#")
                             {
 
                                 counter++;
 
                             }
-                            //bir sayı varsa sağ itilebilir
+                            //bir sayı varsa sola itilebilir
                             if (counter == 2) push = true;
                             // Duvar kontrolü eklenmiş olan for döngüsü
                             for (int i = counter - 1; i > 1; i--)
@@ -329,7 +332,7 @@ namespace Countdown
                             else if (counter > 2) smash = true;
 
 
-                            //dizinin sağı boşsa ve azalansa
+                            //dizinin sola boşsa ve azalansa
                             if (gameField[cursory, cursorx - counter] == " " && push)
                             {
                                 // Sondan başlayarak tüm sayıları sola kaydırma
@@ -352,19 +355,19 @@ namespace Countdown
                                 cursorx--;
                                 gameField[cursory, cursorx] = "X";
                             }
+                            //sayının solu duvarsa, azalansa ve smash edilebilirse
                             else if (gameField[cursory, cursorx - counter] == "#" && smash && push)
                             {
+                                //puan kontrolü
                                 if (gameField[cursory, cursorx - counter + 1] == "0") gameScore += 20;
                                 else if (gameField[cursory, cursorx - counter + 1] == "1" || gameField[cursory, cursorx - counter + 1] == "2" || gameField[cursory, cursorx - counter + 1] == "3" || gameField[cursory, cursorx - counter + 1] == "4") gameScore += 2;
                                 else if (gameField[cursory, cursorx - counter + 1] == "6" || gameField[cursory, cursorx - counter + 1] == "7" || gameField[cursory, cursorx - counter + 1] == "8" || gameField[cursory, cursorx - counter + 1] == "9") gameScore += 1;
-
+                                //her smash edilen sayı için rastgele sayının oluşması
                                 do
                                 {
                                     rastgelex = random.Next(1, 52);
                                     rastgeley = random.Next(1, 22);
                                     rastgelesayiSmash = random.Next(5, 10);
-
-
 
                                 } while (gameField[rastgeley, rastgelex] != " ");
                                 gameField[rastgeley, rastgelex] = rastgelesayiSmash.ToString();
@@ -395,12 +398,13 @@ namespace Countdown
                     }
 
 
-
+                    //yukarıya doğru hareket
                     if (cki.Key == ConsoleKey.UpArrow && cursory > 1)
                     {
+                        //Player'in üstündeki değeri alıyor
                         string currentCellValue = gameField[cursory - 1, cursorx];
 
-                        // Eğer currentCellValue listNumber içinde yoksa işlemi yap
+                        // Eğer currentCellValue listNumber içinde yoksa işlemi yap, duvar yoksa hareket etmeyi sağlıyor
                         if (!listUnTouch.Contains(currentCellValue))
                         {
                             Console.SetCursorPosition(cursorx, cursory);
@@ -411,6 +415,7 @@ namespace Countdown
 
 
                         }
+                        //sayı itmesi
                         else if (numbers.Contains(currentCellValue))
                         {
 
@@ -447,10 +452,10 @@ namespace Countdown
                             else if (counter > 2) smash = true;
 
 
-                            //dizinin sağı boşsa ve azalansa
+                            //dizinin üstü boşsa ve azalansa
                             if (gameField[cursory - counter, cursorx] == " " && push)
                             {
-                                // Sondan başlayarak tüm sayıları sağa kaydırma
+                                // Sondan başlayarak tüm sayıları yukarıya kaydırma
                                 for (int i = counter; i > 1; i--)
                                 {
                                     if (int.TryParse(gameField[cursory - i + 1, cursorx], out temp))
@@ -470,12 +475,14 @@ namespace Countdown
                                 cursory--;
                                 gameField[cursory, cursorx] = "X";
                             }
+                            //sayının üstü duvarsa, azalansa ve smash edilebilirse
                             else if (gameField[cursory - counter, cursorx] == "#" && smash && push)
                             {
+                                //puanlama
                                 if (gameField[cursory-counter+1, cursorx ] == "0") gameScore += 20;
                                 else if (gameField[cursory - counter + 1, cursorx] == "1" || gameField[cursory - counter + 1, cursorx] == "2" || gameField[cursory - counter + 1, cursorx ] == "3" || gameField[cursory - counter + 1, cursorx ] == "4") gameScore += 2;
                                 else if (gameField[cursory - counter + 1, cursorx] == "6" || gameField[cursory - counter + 1, cursorx] == "7" || gameField[cursory - counter + 1, cursorx ] == "8" || gameField[cursory - counter + 1, cursorx ] == "9") gameScore += 1;
-
+                                //smash'ten sonra rastgele sayının oluşması
                                 do
                                 {
                                     rastgelex = random.Next(1, 52);
@@ -489,7 +496,7 @@ namespace Countdown
                                 Console.SetCursorPosition(rastgelex, rastgeley);
                                 Console.WriteLine(rastgelesayiSmash);
 
-                                // Sondan başlayarak tüm sayıları sağa kaydırma
+                                // Sondan başlayarak tüm sayıları yukarıya kaydırma
                                 for (int i = counter; i > 1; i--)
                                 {
                                     if (int.TryParse(gameField[cursory - i + 2, cursorx], out temp))
@@ -515,7 +522,7 @@ namespace Countdown
 
                     }
 
-
+                    //aşağıya doğru hareket
                     if (cki.Key == ConsoleKey.DownArrow && cursory < 21)
                     {
                         string currentCellValue = gameField[cursory + 1, cursorx];
@@ -530,6 +537,7 @@ namespace Countdown
                             gameField[cursory, cursorx] = "X";
 
                         }
+                        //sayı itmesi
                         else if (numbers.Contains(currentCellValue))
                         {
 
@@ -539,7 +547,7 @@ namespace Countdown
                                 counter++;
 
                             }
-                            //bir sayı varsa yukarı itilebilir
+                            //bir sayı varsa aşağı itilebilir
                             if (counter == 2) push = true;
                             // Duvar kontrolü eklenmiş olan for döngüsü
                             for (int i = counter - 1; i > 1; i--)
@@ -566,10 +574,10 @@ namespace Countdown
                             else if (counter > 2) smash = true;
 
 
-                            //dizinin sağı boşsa ve azalansa
+                            //dizinin aşağısı boşsa ve azalansa
                             if (gameField[cursory + counter, cursorx] == " " && push)
                             {
-                                // Sondan başlayarak tüm sayıları sağa kaydırma
+                                // Sondan başlayarak tüm sayıları aşağıya kaydırma
                                 for (int i = counter; i > 1; i--)
                                 {
                                     if (int.TryParse(gameField[cursory + i - 1, cursorx], out temp))
@@ -589,12 +597,14 @@ namespace Countdown
                                 cursory++;
                                 gameField[cursory, cursorx] = "X";
                             }
+                            //sayının aşağısı duvarsa, azalansa ve smash edilebilirse
                             else if (gameField[cursory + counter, cursorx] == "#" && smash && push)
                             {
+                                //puanlama
                                 if (gameField[cursory + counter - 1, cursorx] == "0") gameScore += 20;
                                 else if (gameField[cursory + counter - 1, cursorx] == "1" || gameField[cursory + counter - 1, cursorx] == "2" || gameField[cursory + counter - 1, cursorx] == "3" || gameField[cursory + counter - 1, cursorx] == "4") gameScore += 2;
                                 else if (gameField[cursory + counter - 1, cursorx] == "6" || gameField[cursory + counter - 1, cursorx] == "7" || gameField[cursory + counter - 1, cursorx] == "8" || gameField[cursory + counter - 1, cursorx] == "9") gameScore += 1;
-
+                                //smash'ten sonra rastgele sayının oluşması
                                 do
                                 {
                                     rastgelex = random.Next(1, 52);
@@ -608,7 +618,7 @@ namespace Countdown
                                 Console.SetCursorPosition(rastgelex, rastgeley);
                                 Console.WriteLine(rastgelesayiSmash);
 
-                                // Sondan başlayarak tüm sayıları sağa kaydırma
+                                // Sondan başlayarak tüm sayıları aşağı kaydırma
                                 for (int i = counter; i > 1; i--)
                                 {
                                     if (int.TryParse(gameField[cursory + i - 2, cursorx], out temp))
@@ -643,13 +653,14 @@ namespace Countdown
 
                 }
 
-
+                //50ms'de bir değerin arttırılması, 20'nin katı ise 1 saniye; 300'ün katı ise 15 saniye.
                 tempvaluetime++;
                 if (tempvaluetime % 20 == 0)
                 {
 
                     gameTime++;
                 }
+                //15 saniye'de bir sayıların azalması
                 if (tempvaluetime % 300 == 0)
                 {
                     for (int i = 1; i < 22; i++)
@@ -681,6 +692,8 @@ namespace Countdown
                         }
                     }
                 }
+                //0'ların hareketi
+                //hasMoved bool arrayi ile gittiği pozisyonu True değeri atıyoruz ki for ile '0'ları aradığında iki kere hareket ettirmesin.
                 bool[,] hasMoved = new bool[22, 52];
                 if (tempvaluetime % 20 == 0)
                 {
@@ -688,6 +701,7 @@ namespace Countdown
                     {
                         for (int j = 1; j < 52; j++)
                         {
+                            //'0' ise ve o pozisyonu false ise
                             if (gameField[i, j] == "0" && !hasMoved[i, j])
                             {
 
@@ -708,6 +722,7 @@ namespace Countdown
                                                 Console.WriteLine(" ");
 
                                                 j++;
+                                                //'0' üstümüze gelirse canımızın azalması ve random bir yere atanması
                                                 if (gameField[i, j] == "X")
                                                 {
                                                     Console.SetCursorPosition(j, i);
@@ -978,7 +993,7 @@ namespace Countdown
             Thread.Sleep(150);
             Console.SetCursorPosition(33, 25);
             Console.WriteLine("?MXT@Wx.~    :     ~'##*$$$$M~");
-            Thread.Sleep(1700);
+            Thread.Sleep(1000);
 
 
 
@@ -989,7 +1004,7 @@ namespace Countdown
 
         static void innitialWalls()
         {
-           
+           //3 tane 11  uzunluğunda duvarların oluşması.
             for (int i = 0; i < 3; i++)
             {
                 bool isTrue = false;
@@ -1009,7 +1024,8 @@ namespace Countdown
                         randomy = random.Next(2, 51);
                         randomx = random.Next(2, 11);
                     }
-
+                    //1 yatay, 2 dikey
+                    //etrafını kontrol ediyor ve daha sonra duvarı yazdırıyor.
                     if (randomdir == 1)
                     {
                         for (int k = randomx - 1; k <= randomx + 1; k++)
@@ -1072,7 +1088,7 @@ namespace Countdown
                     }
                 }
             }
-
+            //5 tane 7 uzunluğunda duvarların oluşması
             for (int i = 0; i < 5; i++)
             {
                 bool isTrue = false;
@@ -1155,6 +1171,7 @@ namespace Countdown
                     }
                 }
             }
+            //20 tane 3 uzunluğunda sayıların oluşması
             for (int i = 0; i < 20; i++)
             {
                 bool isTrue = false;
